@@ -61,6 +61,35 @@ async def patches(ctx: commands.Context):
     patches_embed.set_image(url=url)
     await ctx.send(embed=patches_embed)
 
+@bot.command(brief='Posts a Cookie pic <3 (the bird not the food)')
+async def cookie(ctx: commands.Context):
+    cookie_embed = discord.Embed(title='Cookie Is Here!', color=discord.Color(0xFF00EC))
+    url = random.choice(config.cookie_list)
+    cookie_embed.set_image(url=url)
+    await ctx.send(embed=cookie_embed)
+
+@bot.command(brief='Posts a Gem pic <3')
+async def gem(ctx: commands.Context):
+    gem_embed = discord.Embed(title='Gem Is Here!', color=discord.Color(0xFF00EC))
+    url = random.choice(config.gem_list)
+    gem_embed.set_image(url=url)
+    await ctx.send(embed=gem_embed)
+
+@bot.command(brief='Posts a Bella pic <3')
+async def bella(ctx: commands.Context):
+    async with ClientSession() as cs:
+        async with cs.get('https://tw2.pw/api/bella.php') as r:
+            data = await r.json()
+            if r.status != 200:
+                await ctx.send(data['message'])
+    
+    title = data['caption']
+    url = data['url']
+    bella_embed = discord.Embed(title=title, color=discord.Color(0xDA71DA))
+    bella_embed.set_image(url=url)
+    await ctx.send(embed=bella_embed)
+
+
 @bot.command(brief='Displays your profile', aliases=['pf'])
 async def profile(ctx: commands.Context):
     embed = discord.Embed(title=ctx.author.display_name, description='Charlie Cult Member')
