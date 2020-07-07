@@ -103,7 +103,7 @@ async def fact(ctx: commands.Context):
 @bot.group(brief='The main commmand for posting pet pics!')
 async def pet(ctx: commands.Context):
     if ctx.invoked_subcommand is None:
-        description = 'bella\n charlie\n coco\n cookie\n gem\n lucy\n mice\n norma\n pancake\n patches\n penny\n salem\n valkyrie\n whiskey'
+        description = 'bella\n charlie\n coco\n cookie\n gem\n lucky\n lucy\n mice\n norma\n pancake\n patches\n penny\n salem\n valkyrie\n whiskey'
         embed = discord.Embed(title='Here is a List of Pets!', description=description)
         await ctx.send(embed=embed)
 
