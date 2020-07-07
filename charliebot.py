@@ -127,6 +127,10 @@ async def cookie(ctx: commands.Context):
 async def gem(ctx: commands.Context):
     await create_pet_embed(ctx, 'gem')
 
+@pet.command(brief='Posts a Lucky pic <3')
+async def lucky(ctx: commands.Context):
+    await create_pet_embed(ctx, 'lucky')
+
 @pet.command(brief='Posts a Lucy pic <3')
 async def lucy(ctx: commands.Context):
     await create_pet_embed(ctx, 'lucy')
