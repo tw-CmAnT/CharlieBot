@@ -20,6 +20,18 @@ def is_cmant(discord_id: int):
         return ctx.author.id == discord_id
     return commands.check(predicate)
 
+async def create_pet_embed(ctx: commands.Context, name: str):
+    async with ClientSession() as cs:
+        async with cs.get(f'https://tw2.pw/api/pet.php?pet={name}') as r:
+            data = await r.json()
+            if r.status != 200:
+                await ctx.send(data['message'])
+    
+    title = data['caption']
+    url = data['url']
+    pet_embed = discord.Embed(title=title, color=discord.Color(0x2AE150))
+    pet_embed.set_image(url=url)
+    await ctx.send(embed=pet_embed)
 
 # Bot Commands
 
@@ -40,56 +52,6 @@ async def mute(ctx: commands.Context, *, target: discord.Member):
     await target.add_roles(role)
     await ctx.send(f'Muted {target.display_name}')
 
-@bot.command(brief='Posts a Charlie pic <3')
-async def charlie(ctx: commands.Context):
-    charlie_embed = discord.Embed(title='Charlie Is Here!', description='Woof Woof', color=discord.Color.blurple())
-    url = random.choice(config.charlie_list)
-    charlie_embed.set_image(url=url)
-    await ctx.send(embed=charlie_embed)
-
-@bot.command(brief='Posts a Coco pic <3')
-async def coco(ctx: commands.Context):
-    coco_embed = discord.Embed(title='Coco Is Here!', description='Follow Coco @ https://www.instagram.com/xrangii/', color=discord.Color.gold())
-    url = random.choice(config.coco_list)
-    coco_embed.set_image(url=url)
-    await ctx.send(embed=coco_embed)
-
-@bot.command(brief='Posts a Patches pic <3')
-async def patches(ctx: commands.Context):
-    patches_embed = discord.Embed(title='I am an autistic cat!', description='Woof Woof', color=discord.Color.purple())
-    url = random.choice(config.patches_list)
-    patches_embed.set_image(url=url)
-    await ctx.send(embed=patches_embed)
-
-@bot.command(brief='Posts a Cookie pic <3 (the bird not the food)')
-async def cookie(ctx: commands.Context):
-    cookie_embed = discord.Embed(title='Cookie Is Here!', color=discord.Color(0xFF00EC))
-    url = random.choice(config.cookie_list)
-    cookie_embed.set_image(url=url)
-    await ctx.send(embed=cookie_embed)
-
-@bot.command(brief='Posts a Gem pic <3')
-async def gem(ctx: commands.Context):
-    gem_embed = discord.Embed(title='Gem Is Here!', color=discord.Color(0xFF00EC))
-    url = random.choice(config.gem_list)
-    gem_embed.set_image(url=url)
-    await ctx.send(embed=gem_embed)
-
-@bot.command(brief='Posts a Bella pic <3')
-async def bella(ctx: commands.Context):
-    async with ClientSession() as cs:
-        async with cs.get('https://tw2.pw/api/bella.php') as r:
-            data = await r.json()
-            if r.status != 200:
-                await ctx.send(data['message'])
-    
-    title = data['caption']
-    url = data['url']
-    bella_embed = discord.Embed(title=title, color=discord.Color(0xDA71DA))
-    bella_embed.set_image(url=url)
-    await ctx.send(embed=bella_embed)
-
-
 @bot.command(brief='Displays your profile', aliases=['pf'])
 async def profile(ctx: commands.Context):
     embed = discord.Embed(title=ctx.author.display_name, description='Charlie Cult Member')
@@ -104,12 +66,14 @@ async def tbh(ctx: commands.Context):
 @bot.command(brief='Tells you a joke')
 async def joke(ctx: commands.Context):
     async with ClientSession() as cs:
-        async with cs.get('https://sv443.net/jokeapi/v2/joke/Any?blacklistFlags=nsfw,religious,political,racist,sexist&type=single') as r:
+        async with cs.get('https://official-joke-api.appspot.com/jokes/random') as r:
             data = await r.json()
             if r.status != 200:
                 await ctx.send(data['message'])
     
-    await ctx.send(data['joke'])
+    await ctx.send(data['setup'])
+    time.sleep(1)
+    await ctx.send(data['punchline'])
             
 @bot.command(brief='Posts a random dog pic')
 async def dog(ctx: commands.Context):
@@ -133,6 +97,73 @@ async def fact(ctx: commands.Context):
                 await ctx.send(data['message'])
 
     await ctx.send(data['facts'][0])
+
+# Start of Pet Commands #
+
+@bot.group(brief='The main commmand for posting pet pics!')
+async def pet(ctx: commands.Context):
+    if ctx.invoked_subcommand is None:
+        description = 'bella\n charlie\n coco\n cookie\n gem\n lucy\n mice\n norma\n pancake\n patches\n penny\n salem\n valkyrie\n whiskey'
+        embed = discord.Embed(title='Here is a List of Pets!', description=description)
+        await ctx.send(embed=embed)
+
+@pet.command(brief='Posts a Bella pic <3')
+async def bella(ctx: commands.Context):
+    await create_pet_embed(ctx, 'bella')
+
+@pet.command(brief='Posts a Charlie pic <3')
+async def charlie(ctx: commands.Context):
+    await create_pet_embed(ctx, 'charlie')
+
+@pet.command(brief='Posts a Coco pic <3')
+async def coco(ctx: commands.Context):
+    await create_pet_embed(ctx, 'coco')
+
+@pet.command(brief='Posts a Cookie pic <3 (the bird not the food)')
+async def cookie(ctx: commands.Context):
+    await create_pet_embed(ctx, 'cookie')
+
+@pet.command(brief='Posts a Gem pic <3')
+async def gem(ctx: commands.Context):
+    await create_pet_embed(ctx, 'gem')
+
+@pet.command(brief='Posts a Lucy pic <3')
+async def lucy(ctx: commands.Context):
+    await create_pet_embed(ctx, 'lucy')
+
+@pet.command(brief='Posts a Mice pic <3')
+async def mice(ctx: commands.Context):
+    await create_pet_embed(ctx, 'mice')
+
+@pet.command(brief='Posts a Norma pic <3')
+async def norma(ctx: commands.Context):
+    await create_pet_embed(ctx, 'norma')
+
+@pet.command(brief='Posts a Pancake pic <3')
+async def pancake(ctx: commands.Context):
+    await create_pet_embed(ctx, 'pancake')
+
+@pet.command(brief='Posts a Patches pic <3')
+async def patches(ctx: commands.Context):
+    await create_pet_embed(ctx, 'patches')
+
+@pet.command(brief='Posts a Penny pic <3')
+async def penny(ctx: commands.Context):
+    await create_pet_embed(ctx, 'penny')
+
+@pet.command(brief='Posts a Salem pic <3')
+async def salem(ctx: commands.Context):
+    await create_pet_embed(ctx, 'salem')
+
+@pet.command(brief='Posts a Valkyrie pic <3')
+async def valkyrie(ctx: commands.Context):
+    await create_pet_embed(ctx, 'valkyrie')
+
+@pet.command(brief='Posts a Whiskey pic <3')
+async def whiskey(ctx: commands.Context):
+    await create_pet_embed(ctx, 'whiskey')
+
+# End of Pet Commands #
 
 # Events
 
