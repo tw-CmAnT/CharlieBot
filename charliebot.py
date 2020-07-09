@@ -100,72 +100,19 @@ async def fact(ctx: commands.Context):
 
 # Start of Pet Commands #
 
-@bot.group(brief='The main commmand for posting pet pics!')
-async def pet(ctx: commands.Context):
-    if ctx.invoked_subcommand is None:
-        description = 'bella\n charlie\n coco\n cookie\n gem\n lucky\n lucy\n mice\n norma\n pancake\n patches\n penny\n salem\n valkyrie\n whiskey'
+@bot.command(brief='The main commmand for posting pet pics!')
+async def pet(ctx: commands.Context, name: str = ''):
+    if name == 'random':
+        await create_pet_embed(ctx, random.choice(config.pets_list))
+
+    elif (not name) or (name not in config.pets_list):
+        sorted_list = sorted(config.pets_list)
+        description = "\n".join(sorted_list)
         embed = discord.Embed(title='Here is a List of Pets!', description=description)
         await ctx.send(embed=embed)
-
-@pet.command(brief='Posts a Bella pic <3')
-async def bella(ctx: commands.Context):
-    await create_pet_embed(ctx, 'bella')
-
-@pet.command(brief='Posts a Charlie pic <3')
-async def charlie(ctx: commands.Context):
-    await create_pet_embed(ctx, 'charlie')
-
-@pet.command(brief='Posts a Coco pic <3')
-async def coco(ctx: commands.Context):
-    await create_pet_embed(ctx, 'coco')
-
-@pet.command(brief='Posts a Cookie pic <3 (the bird not the food)')
-async def cookie(ctx: commands.Context):
-    await create_pet_embed(ctx, 'cookie')
-
-@pet.command(brief='Posts a Gem pic <3')
-async def gem(ctx: commands.Context):
-    await create_pet_embed(ctx, 'gem')
-
-@pet.command(brief='Posts a Lucky pic <3')
-async def lucky(ctx: commands.Context):
-    await create_pet_embed(ctx, 'lucky')
-
-@pet.command(brief='Posts a Lucy pic <3')
-async def lucy(ctx: commands.Context):
-    await create_pet_embed(ctx, 'lucy')
-
-@pet.command(brief='Posts a Mice pic <3')
-async def mice(ctx: commands.Context):
-    await create_pet_embed(ctx, 'mice')
-
-@pet.command(brief='Posts a Norma pic <3')
-async def norma(ctx: commands.Context):
-    await create_pet_embed(ctx, 'norma')
-
-@pet.command(brief='Posts a Pancake pic <3')
-async def pancake(ctx: commands.Context):
-    await create_pet_embed(ctx, 'pancake')
-
-@pet.command(brief='Posts a Patches pic <3')
-async def patches(ctx: commands.Context):
-    await create_pet_embed(ctx, 'patches')
-
-@pet.command(brief='Posts a Penny pic <3')
-async def penny(ctx: commands.Context):
-    await create_pet_embed(ctx, 'penny')
-
-@pet.command(brief='Posts a Salem pic <3')
-async def salem(ctx: commands.Context):
-    await create_pet_embed(ctx, 'salem')
-
-@pet.command(brief='Posts a Valkyrie pic <3')
-async def valkyrie(ctx: commands.Context):
-    await create_pet_embed(ctx, 'valkyrie')
-
-@pet.command(brief='Posts a Whiskey pic <3')
-async def whiskey(ctx: commands.Context):
-    await create_pet_embed(ctx, 'whiskey')
+    
+    else:
+        await create_pet_embed(ctx, name)
 
 # End of Pet Commands #
 
