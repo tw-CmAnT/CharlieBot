@@ -21,7 +21,7 @@ class Pets(commands.Cog):
         pet_embed.set_image(url=url)
         await ctx.send(embed=pet_embed)
 
-    async def create_embed_list(self, name: str):
+    #async def create_embed_list(self, name: str):
         # create the embed lists here
         # get a list of all of pet's URLs
         #image_embed = discord.Embed(title=f'Woah {name} album!')
