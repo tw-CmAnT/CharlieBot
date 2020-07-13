@@ -17,9 +17,10 @@ class Anime(commands.Cog):
         return r.status, data
 
 
-    @commands.command(brief='Recommends a random high rated anime.', aliases=['rec', 'suggest', 'sug', 'rmd'])
+    @commands.command(aliases=['rec', 'suggest', 'sug', 'rmd'])
     async def recommend(self, ctx: commands.Context):
-
+        '''Recommends a random high rated anime.'''
+        
         # First Request:
         query = '''
         query ($page: Int, $perPage: Int) {
