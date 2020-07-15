@@ -16,23 +16,22 @@ class Pets(commands.Cog):
                 if r.status != 200:
                     await ctx.send(data['message'])
     
-        title = data['caption']
-        url = data['url']
+        title = f'{name} is here!!'
+        url = random.choice(data['pictures'])
         pet_embed = discord.Embed(title=title, color=discord.Color(0x2AE150))
         pet_embed.set_image(url=url)
         await ctx.send(embed=pet_embed)
 
     async def create_embed_album(self, ctx: commands.Context, name: str):
         async with ClientSession() as cs:
-            async with cs.get(f'https://tw2.pw/api/pet/?name={name}&amount=100') as r:
-                data_list = await r.json()
+            async with cs.get(f'https://tw2.pw/api/pet/?name={name}') as r:
+                data = await r.json()
                 if r.status != 200:
-                    await ctx.send(data_list['message'])
+                    await ctx.send(data['message'])
 
-
+        pictures_list = data['pictures']
         embed_list = []
-        for data in data_list:
-            url = data['url']
+        for url in pictures_list:
             image_embed = discord.Embed(title=f'Woah {name} album!')
             image_embed.set_image(url=url)
             embed_list.append(image_embed)
