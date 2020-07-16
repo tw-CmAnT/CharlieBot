@@ -1,5 +1,6 @@
 import discord
 from discord.ext import commands
+import praw
 import config
 from aiohttp import ClientSession
 import random
@@ -25,6 +26,14 @@ class CharlieBot(commands.Bot):
             except:
                 print(f'Failed to load {extension}')
                 print(traceback.format_exc())
+    
+    def create_reddit(self):
+        reddit = praw.Reddit(client_id = config.client_id,
+                             client_secret = config.client_secret,
+                             user_agent = config.user_agent)
+        
+        return reddit
+
 
 
 bot = CharlieBot(command_prefix=',')

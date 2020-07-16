@@ -1,9 +1,11 @@
 import discord
 from discord.ext import commands
+import praw
 import config
 from aiohttp import ClientSession
 import random
 from bot.paginators import EmbedPaginator
+from charliebot import CharlieBot
 
 class Pets(commands.Cog):
     def __init__(self, bot):
@@ -39,6 +41,22 @@ class Pets(commands.Cog):
         paginator = EmbedPaginator(embeds=embed_list)
         await paginator.run(ctx)
 
+    
+    @commands.command()
+    async def aww(self, ctx: commands.Context):
+        '''Get a random post from r/aww subreddit'''
+        reddit = CharlieBot.create_reddit(self)
+        subreddit = reddit.subreddit('aww')
+
+        submission = next(subreddit.random_rising())
+
+        while submission.is_self or submission.domain != 'i.redd.it':
+            submission = next(subreddit.random_rising())
+
+        embed = discord.Embed(title=submission.title)
+        embed.set_image(url=submission.url)
+        await ctx.send(embed=embed)
+                
 
     @commands.command()
     async def dog(self, ctx: commands.Context):

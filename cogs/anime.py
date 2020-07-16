@@ -1,8 +1,10 @@
 import discord
 from discord.ext import commands
+import praw
 from aiohttp import ClientSession
 import random
 import time
+from charliebot import CharlieBot
 from bot.paginators import EmbedPaginator
 
 class Anime(commands.Cog):
@@ -176,7 +178,22 @@ class Anime(commands.Cog):
         else:
             paginator = EmbedPaginator(embeds=embed_list)
             await paginator.run(ctx) 
+    
+    @commands.command()
+    async def jojo(self, ctx: commands.Context):
+        '''Get a random post from r/aww subreddit'''
+        reddit = CharlieBot.create_reddit(self)
+        subs_list = ['ShitPostCrusaders', 'StardustCrusaders', 'wholesomejojo']
+        subreddit = reddit.subreddit(random.choice(subs_list))
 
+        submission = next(subreddit.random_rising())
+
+        while submission.spoiler or submission.is_self or submission.domain != 'i.redd.it':
+            submission = next(subreddit.random_rising())
+
+        embed = discord.Embed(title=submission.title)
+        embed.set_image(url=submission.url)
+        await ctx.send(embed=embed)
          
 
 def setup(bot):
