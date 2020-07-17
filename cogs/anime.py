@@ -1,11 +1,9 @@
 import discord
 from discord.ext import commands
-import praw
 from aiohttp import ClientSession
 import random
-import time
-from charliebot import CharlieBot
 from bot.paginators import EmbedPaginator
+from bot.reddit import Reddit 
 
 class Anime(commands.Cog):
     def __init__(self, bot):
@@ -39,7 +37,7 @@ class Anime(commands.Cog):
     async def anime(self, ctx: commands.Context):
         '''The main commmand for anime!'''
         if ctx.invoked_subcommand is None:
-            await ctx.send('**Usage:** \n `,anime recommend/rec/rmd`\n `,anime search/s <name>`')
+            await ctx.send('**Usage:** \n `,anime recommend/rec/rmd`\n `,anime search/s <name>`\n `anime meme`')
 
     @anime.command(aliases=['rec', 'rmd'])
     async def recommend(self, ctx: commands.Context):
@@ -179,18 +177,23 @@ class Anime(commands.Cog):
             paginator = EmbedPaginator(embeds=embed_list)
             await paginator.run(ctx) 
     
+    @anime.command()
+    async def meme(self, ctx: commands.Context):
+        '''Get a random anime meme'''
+        reddit = Reddit()
+        submission = reddit.get_random_submission('Animemes')
+        embed = discord.Embed(title=submission.title)
+        embed.set_image(url=submission.url)
+        await ctx.send(embed=embed)
+
     @commands.command()
     async def jojo(self, ctx: commands.Context):
-        '''Get a random post from r/aww subreddit'''
-        reddit = CharlieBot.create_reddit(self)
+        '''Get a random jojo post'''
         subs_list = ['ShitPostCrusaders', 'StardustCrusaders', 'wholesomejojo']
-        subreddit = reddit.subreddit(random.choice(subs_list))
+        subreddit_name = random.choice(subs_list)
 
-        submission = next(subreddit.random_rising())
-
-        while submission.spoiler or submission.is_self or submission.domain != 'i.redd.it':
-            submission = next(subreddit.random_rising())
-
+        reddit = Reddit()
+        submission = reddit.get_random_submission(subreddit_name)
         embed = discord.Embed(title=submission.title)
         embed.set_image(url=submission.url)
         await ctx.send(embed=embed)
