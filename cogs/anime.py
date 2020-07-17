@@ -37,7 +37,7 @@ class Anime(commands.Cog):
     async def anime(self, ctx: commands.Context):
         '''The main commmand for anime!'''
         if ctx.invoked_subcommand is None:
-            await ctx.send('**Usage:** \n `,anime recommend/rec/rmd`\n `,anime search/s <name>`\n `anime meme`')
+            await ctx.send('**Usage:** \n `,anime recommend/rec/rmd`\n `,anime search/s <name>`\n `,anime meme`')
 
     @anime.command(aliases=['rec', 'rmd'])
     async def recommend(self, ctx: commands.Context):
